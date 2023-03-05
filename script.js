@@ -37,7 +37,9 @@ function add_Book(e) {
   data.pop();
   data.push(chk_bx.checked);
   const new_book = new Book(data[0], data[1], data[2], data[3]);
-  library.push(new_book);
+
+  if(library.length <15){library.push(new_book);}
+  else{window.alert("A maximum of 15 books are allowed.")}
   generate_grid();
 
   const close = document.querySelectorAll('#remove');
@@ -71,8 +73,7 @@ function generate_grid() {
   for (let i = 0; i < library.length; i += 1) {
     container.innerHTML += `<div class="card" id="card${i}"></div>`;
     const card = document.getElementById(`card${i}`);
-    if (i === 5) { r = 1; c = 0; }
-    if (i === 10) { r = 2; c = 0; }
+    if (i%5 == 0 && i != 0) { r += 1; c = 0; }
     card.style.cssText = `grid-row-start:${(r * 5) + 1};grid-row-end:${(r * 5) + 1};grid-column-start:${(c * 4) + 1};grid-column-end:${(c * 4) + 1};`;
     c += 1;
 
