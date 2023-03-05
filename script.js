@@ -19,6 +19,7 @@ const formbg = document.getElementById('formbg');
 const inputs = document.querySelectorAll('input');
 const chk_bx = document.getElementById('chk');
 
+
 function load_form(e) {
   form.classList.remove('invisible');
   formbg.classList.remove('invisible');
@@ -42,8 +43,16 @@ function add_Book(e) {
   else{window.alert("A maximum of 15 books are allowed.")}
   generate_grid();
 
-  const close = document.querySelectorAll('#remove');
-  close.forEach((x) => x.addEventListener('click', remove_Book));
+  
+
+}
+function read_toggle(e){
+
+    const id = String(this.parentElement.id);
+    const index = id[id.length - 1];
+    library[index].is_read = !(library[index].is_read);
+    generate_grid();
+  
 }
 
 function remove_Book(e) {
@@ -54,8 +63,7 @@ function remove_Book(e) {
   library.splice(index, 1);
   generate_grid();
 
-  const close = document.querySelectorAll('#remove');
-  close.forEach((x) => x.addEventListener('click', remove_Book));
+
 }
 
 function Book(title, author, page_count, is_read) {
@@ -76,11 +84,35 @@ function generate_grid() {
     if (i%5 == 0 && i != 0) { r += 1; c = 0; }
     card.style.cssText = `grid-row-start:${(r * 5) + 1};grid-row-end:${(r * 5) + 1};grid-column-start:${(c * 4) + 1};grid-column-end:${(c * 4) + 1};`;
     c += 1;
+    let str = ""
+    if(library[i].is_read == true){str = "read"}
+    else{str = "not read"}
 
-    card.innerHTML = `<div id="title">${library[i].title}</div>
+
+    card.innerHTML = `<div id="title">"${library[i].title}"</div>
                             <div id="author">${library[i].author}</div>
-                            <div id="page_count">${library[i].page_count}</div>
-                            <div id="is_read">${library[i].is_read}</div>
+                            <div id="page_count">${library[i].page_count} pages</div>
+                            <div id="is_read">${str}</div>
                             <div id="remove">X</div>`;
+
+
+    if(library[i].is_read == true){
+        document.querySelectorAll("#is_read")[i].classList.add('read')
+        document.querySelectorAll("#is_read")[i].classList.remove('not_read')
+    }
+    else{
+        document.querySelectorAll("#is_read")[i].classList.add('not_read')
+        document.querySelectorAll("#is_read")[i].classList.remove('read');
+    }
+
+
+     
   }
+  const close = document.querySelectorAll('#remove');
+  close.forEach((x) => x.addEventListener('click', remove_Book));
+  const reads = document.querySelectorAll('#is_read');
+  reads.forEach((read) => read.addEventListener('click', read_toggle)); 
+  
 }
+
+
