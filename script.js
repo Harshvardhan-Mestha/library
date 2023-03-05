@@ -1,55 +1,85 @@
-
-let library = [];
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-use-before-define */
+/* eslint-disable camelcase */
+const library = [];
 let data = [];
 
-function Book(author,title,page_count,is_read){
+const add_btn = document.getElementById('add');
+add_btn.addEventListener('click', load_form);
 
-    this.author = author;
-    this.title = title;
-    this.page_count = page_count;
-    this.is_read = is_read
+const sub_btn = document.getElementById('sub_btn');
+sub_btn.addEventListener('click', add_Book);
+
+const cancel_btn = document.getElementById('cancel');
+cancel_btn.addEventListener('click', cancel_form);
+
+const form = document.getElementById('new_book_form');
+const formbg = document.getElementById('formbg');
+
+const inputs = document.querySelectorAll('input');
+const chk_bx = document.getElementById('chk');
+
+function load_form(e) {
+  form.classList.remove('invisible');
+  formbg.classList.remove('invisible');
 }
 
-
-function add_Book(){
-
-
+function cancel_form(e) {
+  form.classList.add('invisible');
+  formbg.classList.add('invisible');
 }
 
+function add_Book(e) {
+  data = [];
+  formbg.classList.add('invisible');
+  form.classList.add('invisible');
+  inputs.forEach((input) => data.push(input.value));
+  data.pop();
+  data.push(chk_bx.checked);
+  const new_book = new Book(data[0], data[1], data[2], data[3]);
+  library.push(new_book);
+  generate_grid();
 
-Book.prototype.info = function (){
-     return [this.author,this.title,this.page_count,this.is_read]
+  const close = document.querySelectorAll('#remove');
+  close.forEach((x) => x.addEventListener('click', remove_Book));
 }
 
+function remove_Book(e) {
+  const id = String(this.parentElement.id);
+  const index = id[id.length - 1];
+  const rm_book = document.getElementById(`card${index}`);
+  rm_book.innerHTML = '';
+  library.splice(index, 1);
+  generate_grid();
 
-const book = new Book("jkr","hp:tps","400",true)
-console.log(book.info());
-
-
-const add_btn = document.getElementById("add")
-add_btn.addEventListener("click",load_form)
-
-const sub_btn = document.getElementById("sub_btn")
-sub_btn.addEventListener("click",submit_form)
-
-
-const form = document.getElementById("new_book_form")
-const formbg = document.getElementById("formbg")
-
-function load_form(e){
-    console.log("ya")
-    form.classList.remove("invisible")
-    formbg.classList.remove("invisible")
-
+  const close = document.querySelectorAll('#remove');
+  close.forEach((x) => x.addEventListener('click', remove_Book));
 }
 
-function submit_form(e){
-    console.log("yass")
-
-    formbg.classList.add("invisible")
-    form.classList.add("invisible")
+function Book(title, author, page_count, is_read) {
+  this.title = title;
+  this.author = author;
+  this.page_count = page_count;
+  this.is_read = is_read;
 }
 
+function generate_grid() {
+  let r = 0;
+  let c = 0;
+  const container = document.getElementById('card_container');
+  container.innerHTML = '';
+  for (let i = 0; i < library.length; i += 1) {
+    container.innerHTML += `<div class="card" id="card${i}"></div>`;
+    const card = document.getElementById(`card${i}`);
+    if (i === 5) { r = 1; c = 0; }
+    if (i === 10) { r = 2; c = 0; }
+    card.style.cssText = `grid-row-start:${(r * 5) + 1};grid-row-end:${(r * 5) + 1};grid-column-start:${(c * 4) + 1};grid-column-end:${(c * 4) + 1};`;
+    c += 1;
 
-
-
+    card.innerHTML = `<div id="title">${library[i].title}</div>
+                            <div id="author">${library[i].author}</div>
+                            <div id="page_count">${library[i].page_count}</div>
+                            <div id="is_read">${library[i].is_read}</div>
+                            <div id="remove">X</div>`;
+  }
+}
