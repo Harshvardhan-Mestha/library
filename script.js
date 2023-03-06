@@ -34,12 +34,10 @@ function add_Book(e) {
   data = [];
   formbg.classList.add('invisible');
   form.classList.add('invisible');
-  
   inputs.forEach((input) => data.push(input.value));
   data.pop();
   data.push(chk_bx.checked);
   const new_book = new Book(data[0], data[1], data[2], data[3]);
-
 
   if(library.length <15){library.push(new_book);}
   else{window.alert("A maximum of 15 books are allowed.")}
